@@ -8,4 +8,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/v1", v1Router);
 
+app.use(notFoundMiddleware);
+
 export default app;
