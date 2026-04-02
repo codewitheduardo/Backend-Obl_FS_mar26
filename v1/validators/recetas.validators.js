@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const dificultadValores = ["facil", "media", "dificil"];
 
-export const createRecipeSchema = Joi.object({
+export const recetaSchema = Joi.object({
   titulo: Joi.string().trim().min(3).max(100).required().messages({
     "string.base": "El título debe ser un texto",
     "string.empty": "El título es obligatorio",
@@ -87,7 +87,7 @@ export const createRecipeSchema = Joi.object({
   }),
 });
 
-export const updateRecipeSchema = Joi.object({
+export const updateRecetaSchema = Joi.object({
   titulo: Joi.string().trim().min(3).max(100).optional().messages({
     "string.empty": "El título no puede estar vacío",
     "string.min": "El título debe tener al menos 3 caracteres",
@@ -157,21 +157,3 @@ export const updateRecipeSchema = Joi.object({
   .messages({
     "object.min": "Debés enviar al menos un campo para actualizar",
   });
-
-export const recipeIdParamSchema = Joi.object({
-  id: Joi.string().hex().length(24).required().messages({
-    "string.hex": "El id de la receta no es válido",
-    "string.length": "El id de la receta no es válido",
-    "any.required": "El id es obligatorio",
-  }),
-});
-
-export const recipeQuerySchema = Joi.object({
-  titulo: Joi.string().trim().max(100).optional(),
-  dificultad: Joi.string()
-    .valid(...dificultadValores)
-    .optional(),
-  categoriaId: Joi.string().hex().length(24).optional(),
-  page: Joi.number().integer().min(1).default(1),
-  limit: Joi.number().integer().min(1).max(50).default(10),
-});
