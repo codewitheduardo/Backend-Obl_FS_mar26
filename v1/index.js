@@ -8,11 +8,11 @@ import uploadsRouter from './routes/uploads.routes.js';
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.status(200).json({ message: "API v1 funcionando correctamente" });
-});
-
 router.use("/auth", authRouter);
+
+router.use(autorizationMiddleware);
+
+//rutas protegidas
 router.use("/usuarios", usuariosRouter);
 router.use("/recetas", recetasRouter);
 router.use("/categorias", categoriasRouter);
