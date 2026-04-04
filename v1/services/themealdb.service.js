@@ -26,7 +26,7 @@ export const obtenerRecetaExternaPorId = async (id) => {
     params: { i: id },
   });
 
-  return data;
+  return data.meals?.[0] || null;
 };
 
 export const obtenerRecetaAleatoria = async () => {

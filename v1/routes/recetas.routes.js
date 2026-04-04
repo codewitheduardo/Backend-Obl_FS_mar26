@@ -2,14 +2,14 @@ import express from "express";
 import { validateBodyMiddleware } from "../middlewares/validateBody.middleware.js";
 import {
   recetaSchema,
-  updateRecetaSchema,
+  updateRecetaSchema
 } from "../validators/recetas.validators.js";
 import {
   obtenerRecetas,
   crearReceta,
   obtenerRecetaPorId,
   editarReceta,
-  eliminarReceta,
+  eliminarReceta
 } from "../controllers/recetas.controller.js";
 
 const router = express.Router({ mergeParams: true });
