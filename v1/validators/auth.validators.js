@@ -51,3 +51,11 @@ export const loginSchema = Joi.object({
     "any.required": "La contraseña es obligatoria",
   }),
 });
+
+export const googleLoginSchema = Joi.object({
+  idToken: Joi.string().trim().required().messages({
+    "string.base": "El idToken debe ser un texto",
+    "string.empty": "El idToken es obligatorio",
+    "any.required": "El idToken es obligatorio",
+  }),
+});

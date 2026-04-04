@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const themealdbApi = axios.create({
-  baseURL: process.env.THEMEALDB_BASE_URL || "https://www.themealdb.com/api/json/v1/1",
+  baseURL: process.env.THEMEALDB_BASE_URL,
   timeout: 10000,
 });
 
