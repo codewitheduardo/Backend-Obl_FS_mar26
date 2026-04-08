@@ -1,73 +1,42 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import { verifyGoogleToken } from "../services/googleAuth.service.js";
+export const register = async (req, res, next) => {
+  try {
+    const { nombre, email, password, rol } = req.validatedBody;
 
-let usuarios = [];
+    const data = await registerService(nombre, email, password, rol);
 
-export const register = (req, res) => {
-  const { username, password, plan } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 12);
-
-  usuarios.push({ username, password: hashedPassword });
-
-  const token = jwt.sign({ username }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-
-  res.status(201).json({ message: "Usuario registrado correctamente", token });
+    return res.status(201).json({
+      message: "Registro exitoso",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
-export const login = (req, res) => {
-  const { username, password } = req.body;
-  const user = usuarios.find((u) => u.username === username);
-  const valid = user ? bcrypt.compareSync(password, user.password) : false;
+export const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.validatedBody;
 
-  if(!valid)
-    return res.status(401).json({ message: "Credenciales inválidas" });
+    const data = await loginService(email, password);
 
-  const token = jwt.sign({ username }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
-
-  res.status(200).json({ message: "Login exitoso", token });
+    return res.status(200).json({
+      message: "Login exitoso",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const loginConGoogle = async (req, res, next) => {
   try {
-    const { idToken } = req.body;
+    const { idToken } = req.validatedBody;
 
-    const googleUser = await verifyGoogleToken(idToken);
-
-    if (!googleUser.emailVerificado) {
-      return res.status(401).json({
-        message: "La cuenta de Google no tiene el email verificado",
-      });
-    }
-
-    const usuario = {
-      id: googleUser.googleId,
-      nombre: googleUser.nombre,
-      email: googleUser.email,
-      foto: googleUser.foto,
-      proveedor: "google",
-    };
-
-    const token = jwt.sign(
-      {
-        sub: usuario.id,
-        email: usuario.email,
-        proveedor: usuario.proveedor,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES_IN },
-    );
+    const data = await loginConGoogleService(idToken);
 
     return res.status(200).json({
       message: "Login con Google exitoso",
-      data: {
-        usuario,
-        token,
-      },
+      data,
     });
   } catch (error) {
     next(error);

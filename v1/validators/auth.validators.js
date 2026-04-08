@@ -9,15 +9,6 @@ export const registerSchema = Joi.object({
     "any.required": "El nombre es obligatorio",
   }),
 
-  username: Joi.string().trim().alphanum().min(3).max(20).required().messages({
-    "string.base": "El username debe ser un texto",
-    "string.empty": "El username es obligatorio",
-    "string.alphanum": "El username solo puede contener letras y números",
-    "string.min": "El username debe tener al menos 3 caracteres",
-    "string.max": "El username no puede superar los 20 caracteres",
-    "any.required": "El username es obligatorio",
-  }),
-
   email: Joi.string().trim().email().required().messages({
     "string.base": "El email debe ser un texto",
     "string.empty": "El email es obligatorio",
@@ -34,23 +25,30 @@ export const registerSchema = Joi.object({
   }),
 
   rol: Joi.string().valid("chef", "lector").required().messages({
+    "string.base": "El rol debe ser un texto",
     "any.only": "El rol debe ser chef o lector",
     "any.required": "El rol es obligatorio",
   }),
-});
+})
+  .required()
+  .unknown(false);
 
 export const loginSchema = Joi.object({
   email: Joi.string().trim().email().required().messages({
+    "string.base": "El email debe ser un texto",
     "string.empty": "El email es obligatorio",
     "string.email": "El email no tiene un formato válido",
     "any.required": "El email es obligatorio",
   }),
 
   password: Joi.string().required().messages({
+    "string.base": "La contraseña debe ser un texto",
     "string.empty": "La contraseña es obligatoria",
     "any.required": "La contraseña es obligatoria",
   }),
-});
+})
+  .required()
+  .unknown(false);
 
 export const googleLoginSchema = Joi.object({
   idToken: Joi.string().trim().required().messages({
@@ -58,4 +56,6 @@ export const googleLoginSchema = Joi.object({
     "string.empty": "El idToken es obligatorio",
     "any.required": "El idToken es obligatorio",
   }),
-});
+})
+  .required()
+  .unknown(false);
