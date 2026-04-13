@@ -1,3 +1,5 @@
+import { registerService, loginService, loginConGoogleService } from "../services/auth.service.js";
+
 export const register = async (req, res, next) => {
   try {
     const { nombre, email, password, rol } = req.validatedBody;

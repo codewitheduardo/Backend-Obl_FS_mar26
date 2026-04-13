@@ -5,7 +5,7 @@ import {
   verificarFavoritoService,
 } from "../services/favoritos.service.js";
 
-export const agregarFavorito = async (req, res) => {
+export const agregarFavorito = async (req, res, next) => {
   try {
     const { mealDbId } = req.params;
     const usuarioId = req.user.id;
@@ -21,13 +21,11 @@ export const agregarFavorito = async (req, res) => {
       data: favorito,
     });
   } catch (error) {
-    return res.status(error.statusCode || 500).json({
-      message: error.message || "Error al agregar favorito",
-    });
+    next(error);
   }
 };
 
-export const obtenerFavoritos = async (req, res) => {
+export const obtenerFavoritos = async (req, res, next) => {
   try {
     const usuarioId = req.user.id;
 
@@ -38,13 +36,11 @@ export const obtenerFavoritos = async (req, res) => {
       data: favoritos,
     });
   } catch (error) {
-    return res.status(500).json({
-      message: "Error al obtener favoritos",
-    });
+    next(error);
   }
 };
 
-export const eliminarFavorito = async (req, res) => {
+export const eliminarFavorito = async (req, res, next) => {
   try {
     const { mealDbId } = req.params;
     const usuarioId = req.user.id;
@@ -59,13 +55,11 @@ export const eliminarFavorito = async (req, res) => {
       data: favoritoEliminado,
     });
   } catch (error) {
-    return res.status(error.statusCode || 500).json({
-      message: error.message || "Error al eliminar favorito",
-    });
+    next(error);
   }
 };
 
-export const verificarFavorito = async (req, res) => {
+export const verificarFavorito = async (req, res, next) => {
   try {
     const { mealDbId } = req.params;
     const usuarioId = req.user.id;
@@ -79,8 +73,6 @@ export const verificarFavorito = async (req, res) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({
-      message: "Error al verificar favorito",
-    });
+    next(error);
   }
 };

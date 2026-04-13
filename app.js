@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./v1/config/db.js";
 import { notFoundMiddleware } from "./v1/middlewares/notFound.middleware.js";
+import { errorMiddleware } from "./v1/middlewares/error.middleware.js";
 import v1Router from "./v1/index.js";
 
 dotenv.config();
@@ -22,5 +23,6 @@ app.get("/", (req, res) => {
 app.use("/v1", v1Router);
 
 app.use(notFoundMiddleware);
+app.use(errorMiddleware);
 
 export default app;
