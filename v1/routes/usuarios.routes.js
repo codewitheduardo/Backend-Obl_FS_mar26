@@ -5,6 +5,11 @@ import { cambiarPlan } from "../controllers/usuarios.controller.js";
 
 const router = express.Router({ mergeParams: true });
 
-router.patch("/plan", validateBodyMiddleware(updatePlanSchema), cambiarPlan);
+router.patch(
+  "/plan",
+  validateBodyMiddleware(updatePlanSchema),
+  cambiarPlan
+);
+
 
 export default router;
