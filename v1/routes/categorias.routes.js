@@ -1,5 +1,6 @@
 import express from "express";
 import { validateBodyMiddleware } from "../middlewares/validateBody.middleware.js";
+import { validateObjectIdMiddleware } from "../middlewares/validateObjectId.middleware.js";
 import {
   categoriaSchema,
   updateCategoriaSchema,
@@ -16,12 +17,13 @@ const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerCategorias);
 router.post("/", validateBodyMiddleware(categoriaSchema), crearCategoria);
-router.get("/:id", obtenerCategoriaPorId);
+router.get("/:id", validateObjectIdMiddleware, obtenerCategoriaPorId);
 router.put(
   "/:id",
+  validateObjectIdMiddleware,
   validateBodyMiddleware(updateCategoriaSchema),
   editarCategoria,
 );
-router.delete("/:id", eliminarCategoria);
+router.delete("/:id", validateObjectIdMiddleware, eliminarCategoria);
 
 export default router;

@@ -1,46 +1,38 @@
-import { registerService, loginService, loginConGoogleService } from "../services/auth.service.js";
+import {
+  registerService,
+  loginService,
+  loginConGoogleService,
+} from "../services/auth.service.js";
 
 export const register = async (req, res, next) => {
-  try {
-    const { nombre, email, password, rol } = req.validatedBody;
+  const { nombre, email, password, rol } = req.validatedBody;
 
-    const data = await registerService(nombre, email, password, rol);
+  const data = await registerService(nombre, email, password, rol);
 
-    return res.status(201).json({
-      message: "Registro exitoso",
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
+  return res.status(201).json({
+    message: "Registro exitoso",
+    data,
+  });
 };
 
 export const login = async (req, res, next) => {
-  try {
-    const { email, password } = req.validatedBody;
+  const { email, password } = req.validatedBody;
 
-    const data = await loginService(email, password);
+  const data = await loginService(email, password);
 
-    return res.status(200).json({
-      message: "Login exitoso",
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
+  return res.status(200).json({
+    message: "Login exitoso",
+    data,
+  });
 };
 
 export const loginConGoogle = async (req, res, next) => {
-  try {
-    const { idToken } = req.validatedBody;
+  const { idToken } = req.validatedBody;
 
-    const data = await loginConGoogleService(idToken);
+  const data = await loginConGoogleService(idToken);
 
-    return res.status(200).json({
-      message: "Login con Google exitoso",
-      data,
-    });
-  } catch (error) {
-    next(error);
-  }
+  return res.status(200).json({
+    message: "Login con Google exitoso",
+    data,
+  });
 };

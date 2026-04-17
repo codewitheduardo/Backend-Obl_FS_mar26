@@ -2,25 +2,21 @@ import fs from "fs";
 import { subirImagenACloudinary } from "../services/cloudinary.service.js";
 
 export const subirImagenReceta = async (req, res, next) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({
-        message: "Debes enviar una imagen",
-      });
-    }
-
-    const result = await subirImagenACloudinary(req.file.path);
-
-    fs.unlinkSync(req.file.path);
-
-    return res.status(200).json({
-      message: "Imagen subida correctamente",
-      data: {
-        imageUrl: result.secure_url,
-        publicId: result.public_id,
-      },
+  if (!req.file) {
+    return res.status(400).json({
+      message: "Debes enviar una imagen",
     });
-  } catch (error) {
-    next(error);
   }
+
+  const result = await subirImagenACloudinary(req.file.path);
+
+  fs.unlinkSync(req.file.path);
+
+  return res.status(200).json({
+    message: "Imagen subida correctamente",
+    data: {
+      imageUrl: result.secure_url,
+      publicId: result.public_id,
+    },
+  });
 };

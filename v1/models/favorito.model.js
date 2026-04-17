@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 
 const favoritoSchema = new Schema(
   {
-    usuarioId: {
+    usuario: {
       type: Schema.Types.ObjectId,
       ref: "Usuario",
     },
@@ -32,6 +32,6 @@ const favoritoSchema = new Schema(
   }
 );
 
-favoritoSchema.index({ usuarioId: 1, mealDbId: 1 }, { unique: true });
+favoritoSchema.index({ usuario: 1, mealDbId: 1 }, { unique: true });
 
 export default mongoose.model("Favorito", favoritoSchema);
