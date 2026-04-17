@@ -1,29 +1,14 @@
 import Usuario from "../models/usuario.model.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { verifyGoogleToken } from "../utils/googleAuth.js";
-
-const generarToken = (usuario) => {
-  return jwt.sign(
-    {
-      sub: usuario._id,
-      email: usuario.email,
-      rol: usuario.rol,
-      proveedor: usuario.proveedor,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    }
-  );
-};
+import bcrypt from "bcryptjs";
+import { crearError } from "../utils/error.utils.js";
+import { construirRespuestaAuth } from "../utils/authResponse.utils.js";
+import { verifyGoogleToken } from "./googleAuth.service.js";
 
 export const registerService = async (nombre, email, password, rol) => {
   const usuarioExistente = await Usuario.findOne({ email });
 
   if (usuarioExistente) {
-    const error = new Error("El email ya está registrado");
-    error.statusCode = 409;
+    const error = crearError("El email ya está registrado", 409);
     throw error;
   }
 
@@ -34,50 +19,49 @@ export const registerService = async (nombre, email, password, rol) => {
     email,
     password: hash,
     rol,
+    plan: "plus",
     proveedor: "local",
   });
 
   await nuevoUsuario.save();
 
-  const token = generarToken(nuevoUsuario);
-
-  return { token };
+  return construirRespuestaAuth(nuevoUsuario);
 };
 
 export const loginService = async (email, password) => {
   const usuario = await Usuario.findOne({ email });
 
   if (!usuario) {
-    const error = new Error("Credenciales inválidas");
-    error.statusCode = 401;
+    const error = crearError("Credenciales inválidas", 401);
     throw error;
   }
 
   if (usuario.proveedor !== "local") {
-    const error = new Error("Este usuario debe iniciar sesión con Google");
-    error.statusCode = 401;
+    const error = crearError(
+      "Este usuario debe iniciar sesión con Google",
+      401,
+    );
     throw error;
   }
 
   const passwordValida = await bcrypt.compare(password, usuario.password);
 
   if (!passwordValida) {
-    const error = new Error("Credenciales inválidas");
-    error.statusCode = 401;
+    const error = crearError("Credenciales inválidas", 401);
     throw error;
   }
 
-  const token = generarToken(usuario);
-
-  return { token };
+  return construirRespuestaAuth(usuario);
 };
 
-export const loginConGoogleService = async (idToken) => {
+export const loginConGoogleService = async (idToken, rol = "lector") => {
   const googleUser = await verifyGoogleToken(idToken);
 
   if (!googleUser.emailVerificado) {
-    const error = new Error("La cuenta de Google no tiene el email verificado");
-    error.statusCode = 401;
+    const error = crearError(
+      "La cuenta de Google no tiene el email verificado",
+      401,
+    );
     throw error;
   }
 
@@ -87,7 +71,8 @@ export const loginConGoogleService = async (idToken) => {
     usuario = new Usuario({
       nombre: googleUser.nombre,
       email: googleUser.email,
-      rol: "lector",
+      rol,
+      plan: "plus",
       proveedor: "google",
       foto: googleUser.foto || "",
     });
@@ -95,10 +80,10 @@ export const loginConGoogleService = async (idToken) => {
     await usuario.save();
   } else {
     if (usuario.proveedor === "local") {
-      const error = new Error(
-        "Ya existe una cuenta registrada con ese email usando login local"
+      const error = crearError(
+        "Ya existe una cuenta registrada con ese email usando login local",
+        409,
       );
-      error.statusCode = 409;
       throw error;
     }
 
@@ -108,7 +93,5 @@ export const loginConGoogleService = async (idToken) => {
     await usuario.save();
   }
 
-  const token = generarToken(usuario);
-
-  return { token };
+  return construirRespuestaAuth(usuario);
 };

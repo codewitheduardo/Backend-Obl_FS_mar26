@@ -1,39 +1,37 @@
 import {
-  buscarRecetasExternas,
-  buscarRecetasPorIngrediente,
-  obtenerRecetaExternaPorId,
-  obtenerRecetaAleatoria,
-  obtenerCategorias,
+  buscarRecetasExternasService,
+  buscarRecetasPorIngredienteService,
+  obtenerRecetaExternaPorIdService,
+  obtenerRecetaAleatoriaService,
+  obtenerCategoriasService,
 } from "../services/themealdb.service.js";
 
 export const getBuscarRecetasExternas = async (req, res, next) => {
-  try {
-    const { q } = req.query;
-    const data = await buscarRecetasExternas({ query: q });
-    res.status(200).json(data);
-  } catch (error) {
-    next(error);
-  }
+  const { q } = req.query;
+  const data = await buscarRecetasExternasService({ query: q });
+  res.status(200).json(data);
 };
 
 export const getRecetasExternasPorIngrediente = async (req, res, next) => {
   const { ingrediente } = req.query;
-  const data = await buscarRecetasPorIngrediente({ ingredient: ingrediente });
+  const data = await buscarRecetasPorIngredienteService({
+    ingredient: ingrediente,
+  });
   res.status(200).json(data);
 };
 
 export const getRecetaExternaDetalle = async (req, res, next) => {
   const { id } = req.params;
-  const data = await obtenerRecetaExternaPorId(id);
+  const data = await obtenerRecetaExternaPorIdService(id);
   res.status(200).json(data);
 };
 
 export const getRecetaAleatoria = async (req, res, next) => {
-  const data = await obtenerRecetaAleatoria();
+  const data = await obtenerRecetaAleatoriaService();
   res.status(200).json(data);
 };
 
 export const getCategorias = async (req, res, next) => {
-  const data = await obtenerCategorias();
+  const data = await obtenerCategoriasService();
   res.status(200).json(data);
 };

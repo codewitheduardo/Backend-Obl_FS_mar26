@@ -27,9 +27,9 @@ export const login = async (req, res, next) => {
 };
 
 export const loginConGoogle = async (req, res, next) => {
-  const { idToken } = req.validatedBody;
+  const { idToken, rol } = req.validatedBody;
 
-  const data = await loginConGoogleService(idToken);
+  const data = await loginConGoogleService(idToken, rol);
 
   return res.status(200).json({
     message: "Login con Google exitoso",

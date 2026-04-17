@@ -6,10 +6,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const subirImagenACloudinary = async (filePath) => {
+export const subirImagenACloudinaryService = async (filePath) => {
   const result = await cloudinary.uploader.upload(filePath, {
     folder: "recetas",
   });
 
-  return result;
+  return {
+    imageUrl: result.secure_url,
+    publicId: result.public_id,
+  };
 };

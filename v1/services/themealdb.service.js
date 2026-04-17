@@ -5,7 +5,7 @@ const themealdbApi = axios.create({
   timeout: 10000,
 });
 
-export const buscarRecetasExternas = async ({ query }) => {
+export const buscarRecetasExternasService = async ({ query }) => {
   const { data } = await themealdbApi.get("/search.php", {
     params: { s: query },
   });
@@ -13,7 +13,7 @@ export const buscarRecetasExternas = async ({ query }) => {
   return data;
 };
 
-export const buscarRecetasPorIngrediente = async ({ ingredient }) => {
+export const buscarRecetasPorIngredienteService = async ({ ingredient }) => {
   const { data } = await themealdbApi.get("/filter.php", {
     params: { i: ingredient },
   });
@@ -21,7 +21,7 @@ export const buscarRecetasPorIngrediente = async ({ ingredient }) => {
   return data;
 };
 
-export const obtenerRecetaExternaPorId = async (id) => {
+export const obtenerRecetaExternaPorIdService = async (id) => {
   const { data } = await themealdbApi.get("/lookup.php", {
     params: { i: id },
   });
@@ -29,12 +29,12 @@ export const obtenerRecetaExternaPorId = async (id) => {
   return data.meals?.[0] || null;
 };
 
-export const obtenerRecetaAleatoria = async () => {
+export const obtenerRecetaAleatoriaService = async () => {
   const { data } = await themealdbApi.get("/random.php");
   return data;
 };
 
-export const obtenerCategorias = async () => {
+export const obtenerCategoriasService = async () => {
   const { data } = await themealdbApi.get("/categories.php");
   return data;
 };

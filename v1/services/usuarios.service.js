@@ -1,23 +1,21 @@
 import Usuario from "../models/usuario.model.js";
+import { crearError } from "../utils/error.utils.js";
 
 export const cambiarPlanService = async (usuarioId, nuevoPlan) => {
   const usuario = await Usuario.findById(usuarioId);
 
   if (!usuario) {
-    const error = new Error("Usuario no encontrado");
-    error.statusCode = 404;
+    const error = crearError("Usuario no encontrado", 404);
     throw error;
   }
 
   if (usuario.rol !== "chef") {
-    const error = new Error("Solo los usuarios chef pueden cambiar de plan");
-    error.statusCode = 403;
+    const error = crearError("Solo los usuarios chef pueden cambiar de plan", 403);
     throw error;
   }
 
   if (usuario.plan !== "plus") {
-    const error = new Error("Solo se puede cambiar de plus a premium");
-    error.statusCode = 409;
+    const error = crearError("Solo se puede cambiar de plus a premium", 409);
     throw error;
   }
 
@@ -34,7 +32,7 @@ export const cambiarPlanService = async (usuarioId, nuevoPlan) => {
       rol: usuario.rol,
       plan: usuario.plan,
       proveedor: usuario.proveedor,
-      foto: usuario.foto,
+      foto: usuario.foto || "",
     },
   };
 };

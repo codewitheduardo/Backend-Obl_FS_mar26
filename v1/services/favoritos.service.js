@@ -1,4 +1,5 @@
 import Favorito from "../models/favorito.model.js";
+import { crearError } from "../utils/error.utils.js";
 
 export const crearFavoritoService = async (usuarioId, mealDbId, data) => {
   const favoritoExistente = await Favorito.findOne({
@@ -7,8 +8,7 @@ export const crearFavoritoService = async (usuarioId, mealDbId, data) => {
   });
 
   if (favoritoExistente) {
-    const error = new Error("La receta ya está en favoritos");
-    error.statusCode = 409;
+    const error = crearError("La receta ya está en favoritos", 409);
     throw error;
   }
 
@@ -35,8 +35,7 @@ export const eliminarFavoritoService = async (usuarioId, mealDbId) => {
   });
 
   if (!favoritoEliminado) {
-    const error = new Error("El favorito no existe");
-    error.statusCode = 404;
+    const error = crearError("El favorito no existe", 404);
     throw error;
   }
 

@@ -11,5 +11,4 @@ router.patch(
   cambiarPlan
 );
 
-
 export default router;
