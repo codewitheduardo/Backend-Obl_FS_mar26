@@ -2,7 +2,7 @@ import Usuario from "../models/usuario.model.js";
 import bcrypt from "bcryptjs";
 import { crearError } from "../utils/error.utils.js";
 import { construirRespuestaAuth } from "../utils/authResponse.utils.js";
-import { verifyGoogleToken } from "./googleAuth.service.js";
+import { verifyGoogleTokenService } from "./googleAuth.service.js";
 
 export const registerService = async (nombre, email, password, rol) => {
   const usuarioExistente = await Usuario.findOne({ email });
@@ -55,7 +55,7 @@ export const loginService = async (email, password) => {
 };
 
 export const loginConGoogleService = async (idToken, rol = "lector") => {
-  const googleUser = await verifyGoogleToken(idToken);
+  const googleUser = await verifyGoogleTokenService(idToken);
 
   if (!googleUser.emailVerificado) {
     const error = crearError(
