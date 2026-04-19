@@ -6,7 +6,9 @@ import { register, login, loginConGoogle } from "../controllers/auth.controller.
 const router = express.Router({ mergeParams: true });
 
 router.post("/register", validateBodyMiddleware(registerSchema), register);
+
 router.post("/login", validateBodyMiddleware(loginSchema), login);
+
 router.post("/google", validateBodyMiddleware(googleLoginSchema), loginConGoogle);
 
 export default router;

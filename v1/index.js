@@ -9,6 +9,7 @@ import { autorizationMiddleware } from "./middlewares/auth.middleware.js";
 
 const router = express.Router();
 
+//rutas desprotegidas
 router.use("/auth", authRouter);
 
 router.use(autorizationMiddleware);

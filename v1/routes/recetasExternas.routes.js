@@ -10,9 +10,13 @@ import {
 const router = express.Router();
 
 router.get("/buscar", getBuscarRecetasExternas);
+
 router.get("/ingrediente", getRecetasExternasPorIngrediente);
+
 router.get("/aleatoria", getRecetaAleatoria);
+
 router.get("/categorias", getCategorias);
+
 router.get("/:id", getRecetaExternaDetalle);
 
 export default router;

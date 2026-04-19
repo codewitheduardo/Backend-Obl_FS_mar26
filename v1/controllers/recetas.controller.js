@@ -9,7 +9,7 @@ import {
 export const obtenerRecetas = async (req, res, next) => {
   const usuarioId = req.user.id;
 
-  const recetas = await obtenerRecetasService(usuarioId);
+  const recetas = await obtenerRecetasService(usuarioId, req.query);
 
   return res.status(200).json({
     message: "Recetas obtenidas correctamente",

@@ -40,12 +40,12 @@ const recetaSchema = new Schema(
       type: String,
       default: "",
     },
-    categoria: {
+    categoriaId: {
       type: Schema.Types.ObjectId,
       ref: "Categoria",
       required: true,
     },
-    usuario: {
+    usuarioId: {
       type: Schema.Types.ObjectId,
       ref: "Usuario",
       required: true,

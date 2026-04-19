@@ -76,6 +76,7 @@ export const recetaSchema = Joi.object({
   }),
 
   dificultad: Joi.string()
+    .trim()
     .valid(...dificultadValores)
     .required()
     .messages({
