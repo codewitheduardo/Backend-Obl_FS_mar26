@@ -40,6 +40,10 @@ const usuarioSchema = new Schema(
       type: String,
       default: "",
     },
+    fotoPublicId: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,
