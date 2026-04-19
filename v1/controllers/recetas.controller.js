@@ -19,12 +19,11 @@ export const obtenerRecetas = async (req, res, next) => {
 
 export const crearReceta = async (req, res, next) => {
   const usuarioId = req.user.id;
-  const filePath = req.file ? req.file.path : null;
 
   const receta = await crearRecetaService(
     req.validatedBody,
     usuarioId,
-    filePath,
+    req.file,
   );
 
   return res.status(201).json({
@@ -48,13 +47,12 @@ export const obtenerRecetaPorId = async (req, res, next) => {
 export const editarReceta = async (req, res, next) => {
   const { id } = req.params;
   const usuarioId = req.user.id;
-  const filePath = req.file ? req.file.path : null;
 
   const receta = await editarRecetaService(
     id,
     req.validatedBody,
     usuarioId,
-    filePath,
+    req.file,
   );
 
   return res.status(200).json({

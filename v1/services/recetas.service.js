@@ -1,10 +1,10 @@
 import Receta from "../models/receta.model.js";
 import Usuario from "../models/usuario.model.js";
+import cloudinary from "../config/cloudinary.config.js";
 import { crearError } from "../utils/error.utils.js";
-import { eliminarArchivoTemporal } from "../utils/file.utils.js";
 import { obtenerPaginacion } from "../utils/pagination.utils.js";
 import { construirFiltrosRecetas } from "../utils/recetas.utils.js";
-import { subirImagenACloudinaryService } from "./cloudinary.service.js";
+import { uploadBufferToCloudinary } from "../utils/uploadToCloudinary.util.js";
 
 export const obtenerRecetasService = async (usuarioId, query) => {
   const { page, limit, skip } = obtenerPaginacion(query);
@@ -40,7 +40,7 @@ export const obtenerRecetaPorIdService = async (id, usuarioId) => {
   return receta;
 };
 
-export const crearRecetaService = async (data, usuarioId, filePath) => {
+export const crearRecetaService = async (data, usuarioId, file) => {
   const usuario = await Usuario.findById(usuarioId);
 
   if (!usuario) {
@@ -56,61 +56,72 @@ export const crearRecetaService = async (data, usuarioId, filePath) => {
   }
 
   let imagenUrl = "";
+  let imagenPublicId = "";
 
-  try {
-    if (filePath) {
-      const resultadoCloudinary = await subirImagenACloudinaryService(filePath);
-      imagenUrl = resultadoCloudinary.imageUrl;
-    }
+  if (file) {
+    const resultadoCloudinary = await uploadBufferToCloudinary(
+      cloudinary,
+      file.buffer,
+      {
+        folder: "recetas",
+        resource_type: "auto",
+      }
+    );
 
-    const receta = await Receta.create({
-      titulo: data.titulo,
-      descripcion: data.descripcion,
-      ingredientes: data.ingredientes,
-      pasos: data.pasos,
-      tiempoPreparacion: data.tiempoPreparacion,
-      porciones: data.porciones,
-      dificultad: data.dificultad,
-      imagenUrl,
-      categoriaId: data.categoriaId,
-      usuarioId,
-    });
-
-    return receta;
-  } finally {
-    await eliminarArchivoTemporal(filePath);
+    imagenUrl = resultadoCloudinary.secure_url;
+    imagenPublicId = resultadoCloudinary.public_id;
   }
+
+  const receta = await Receta.create({
+    ...data,
+    imagenUrl,
+    imagenPublicId,
+    usuarioId,
+  });
+
+  return receta;
 };
 
-export const editarRecetaService = async (id, data, usuarioId, filePath) => {
+export const editarRecetaService = async (id, data, usuarioId, file) => {
   const receta = await Receta.findOne({ _id: id, usuarioId });
 
   if (!receta) {
     throw crearError("Receta no encontrada", 404);
   }
 
-  try {
-    if (filePath) {
-      const resultadoCloudinary = await subirImagenACloudinaryService(filePath);
-      receta.imagenUrl = resultadoCloudinary.imageUrl;
-    }
+  const publicIdAnterior = receta.imagenPublicId;
 
-    receta.titulo = data.titulo ?? receta.titulo;
-    receta.descripcion = data.descripcion ?? receta.descripcion;
-    receta.ingredientes = data.ingredientes ?? receta.ingredientes;
-    receta.pasos = data.pasos ?? receta.pasos;
-    receta.tiempoPreparacion =
-      data.tiempoPreparacion ?? receta.tiempoPreparacion;
-    receta.porciones = data.porciones ?? receta.porciones;
-    receta.dificultad = data.dificultad ?? receta.dificultad;
-    receta.categoriaId = data.categoriaId ?? receta.categoriaId;
+  if (file) {
+    const resultadoCloudinary = await uploadBufferToCloudinary(
+      cloudinary,
+      file.buffer,
+      {
+        folder: "recetas",
+        resource_type: "auto",
+      }
+    );
 
-    await receta.save();
-
-    return receta;
-  } finally {
-    await eliminarArchivoTemporal(filePath);
+    receta.imagenUrl = resultadoCloudinary.secure_url;
+    receta.imagenPublicId = resultadoCloudinary.public_id;
   }
+
+  receta.titulo = data.titulo ?? receta.titulo;
+  receta.descripcion = data.descripcion ?? receta.descripcion;
+  receta.ingredientes = data.ingredientes ?? receta.ingredientes;
+  receta.pasos = data.pasos ?? receta.pasos;
+  receta.tiempoPreparacion =
+    data.tiempoPreparacion ?? receta.tiempoPreparacion;
+  receta.porciones = data.porciones ?? receta.porciones;
+  receta.dificultad = data.dificultad ?? receta.dificultad;
+  receta.categoriaId = data.categoriaId ?? receta.categoriaId;
+
+  await receta.save();
+
+  if (file && publicIdAnterior) {
+    await cloudinary.uploader.destroy(publicIdAnterior);
+  }
+
+  return receta;
 };
 
 export const eliminarRecetaService = async (id, usuarioId) => {
@@ -118,6 +129,10 @@ export const eliminarRecetaService = async (id, usuarioId) => {
 
   if (!receta) {
     throw crearError("Receta no encontrada", 404);
+  }
+
+  if (receta.imagenPublicId) {
+    await cloudinary.uploader.destroy(receta.imagenPublicId);
   }
 
   await receta.deleteOne();

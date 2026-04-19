@@ -40,6 +40,10 @@ const recetaSchema = new Schema(
       type: String,
       default: "",
     },
+    imagenPublicId: {
+      type: String,
+      default: "",
+    },
     categoriaId: {
       type: Schema.Types.ObjectId,
       ref: "Categoria",
@@ -54,7 +58,7 @@ const recetaSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 export default mongoose.model("Receta", recetaSchema);
