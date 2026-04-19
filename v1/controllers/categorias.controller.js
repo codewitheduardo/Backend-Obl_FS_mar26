@@ -1,19 +1,55 @@
-export const obtenerCategorias = (req, res) => {
-  res.status(200).json({ message: "Listar categorías" });
-}
+import {
+  obtenerCategoriasService,
+  obtenerCategoriaPorIdService,
+  crearCategoriaService,
+  editarCategoriaService,
+  eliminarCategoriaService,
+} from "../services/categorias.service.js";
 
-export const crearCategoria = (req, res) => {
-  res.status(201).json({ message: "Crear categoría" });
-}
+export const obtenerCategorias = async (req, res, next) => {
+  const categorias = await obtenerCategoriasService();
 
-export const obtenerCategoriaPorId = (req, res) => {
-  res.status(200).json({ message: "Obtener categoría por id" });
-}
+  return res.status(200).json({
+    message: "Categorías obtenidas correctamente",
+    data: categorias,
+  });
+};
 
-export const editarCategoria = (req, res) => {
-  res.status(200).json({ message: "Editar categoría" });
-}
+export const obtenerCategoriaPorId = async (req, res, next) => {
+  const { id } = req.params;
 
-export const eliminarCategoria = (req, res) => {
-  res.status(200).json({ message: "Eliminar categoría" });
-}
+  const categoria = await obtenerCategoriaPorIdService(id);
+
+  return res.status(200).json({
+    message: "Categoría obtenida correctamente",
+    data: categoria,
+  });
+};
+
+export const crearCategoria = async (req, res, next) => {
+  const categoria = await crearCategoriaService(req.validatedBody);
+
+  return res.status(201).json({
+    message: "Categoría creada correctamente",
+    data: categoria,
+  });
+};
+
+export const editarCategoria = async (req, res, next) => {
+  const { id } = req.params;
+
+  const categoria = await editarCategoriaService(id, req.validatedBody);
+
+  return res.status(200).json({
+    message: "Categoría actualizada correctamente",
+    data: categoria,
+  });
+};
+
+export const eliminarCategoria = async (req, res, next) => {
+  const { id } = req.params;
+
+  const resultado = await eliminarCategoriaService(id);
+
+  return res.status(200).json(resultado);
+};

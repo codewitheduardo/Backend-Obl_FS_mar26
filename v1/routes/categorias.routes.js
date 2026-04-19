@@ -7,8 +7,8 @@ import {
 } from "../validators/categorias.validators.js";
 import {
   obtenerCategorias,
-  crearCategoria,
   obtenerCategoriaPorId,
+  crearCategoria,
   editarCategoria,
   eliminarCategoria,
 } from "../controllers/categorias.controller.js";
@@ -17,9 +17,9 @@ const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerCategorias);
 
-router.post("/", validateBodyMiddleware(categoriaSchema), crearCategoria);
-
 router.get("/:id", validateObjectIdMiddleware, obtenerCategoriaPorId);
+
+router.post("/", validateBodyMiddleware(categoriaSchema), crearCategoria);
 
 router.put(
   "/:id",
