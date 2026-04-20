@@ -12,7 +12,7 @@ export const registerService = async (nombre, email, password, rol) => {
     throw error;
   }
 
-  const hash = await bcrypt.hash(password, 12);
+  const hash = await bcrypt.hash(password, process.env.BCRYPT_SALT_ROUNDS);
 
   const nuevoUsuario = new Usuario({
     nombre,
