@@ -8,7 +8,7 @@ import { errorMiddleware } from "./v1/middlewares/error.middleware.js";
 import v1Router from "./v1/index.js";
 
 dotenv.config();
-await connectDB();
+connectDB();
 
 const app = express();
 

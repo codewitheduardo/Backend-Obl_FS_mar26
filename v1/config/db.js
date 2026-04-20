@@ -1,36 +1,21 @@
 import mongoose from "mongoose";
 
-let cached = globalThis.mongoose;
-
-if (!cached) {
-  cached = globalThis.mongoose = {
-    conn: null,
-    promise: null,
-  };
-}
-
 const connectDB = async () => {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!process.env.MONGODB_URI) {
-    throw new Error("MONGODB_URI no está definida");
-  }
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 30000,
-    });
-  }
-
   try {
-    cached.conn = await cached.promise;
-    console.log("Conexión a MongoDB establecida");
-    return cached.conn;
+    const uri =
+      process.env.NODE_ENV === "development"
+        ? process.env.MONGO_URI_DEV
+        : process.env.MONGO_URI;
+
+    if (!uri) {
+      throw new Error("No se encontró la URI de conexión a MongoDB");
+    }
+
+    await mongoose.connect(uri);
+
+    console.log("BD conectada");
   } catch (error) {
-    cached.promise = null;
-    console.error("Error al conectar a MongoDB:", error);
+    console.error("Error al conectar bd:", error.message);
     throw error;
   }
 };
