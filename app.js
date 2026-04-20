@@ -1,13 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./v1/config/db.js";
+import { databaseMiddleware } from "./v1/middlewares/database.middleware.js";
 import { notFoundMiddleware } from "./v1/middlewares/notFound.middleware.js";
 import { errorMiddleware } from "./v1/middlewares/error.middleware.js";
 import v1Router from "./v1/index.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
@@ -20,7 +19,7 @@ app.get("/", (req, res) => {
   res.send("Bienvenido a la API de Cook Book");
 });
 
-app.use("/v1", v1Router);
+app.use("/v1", databaseMiddleware, v1Router);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
