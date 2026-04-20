@@ -9,6 +9,7 @@ import {
 } from "../validators/recetas.validators.js";
 import {
   obtenerRecetas,
+  obtenerMisRecetas,
   crearReceta,
   obtenerRecetaPorId,
   editarReceta,
@@ -19,6 +20,10 @@ const router = express.Router({ mergeParams: true });
 
 router.get("/", obtenerRecetas);
 
+router.get("/mis-recetas", obtenerMisRecetas);
+
+router.get("/:id", validateObjectIdMiddleware, obtenerRecetaPorId);
+
 router.post(
   "/",
   upload.single("imagen"),
@@ -26,8 +31,6 @@ router.post(
   validateBodyMiddleware(recetaSchema),
   crearReceta,
 );
-
-router.get("/:id", validateObjectIdMiddleware, obtenerRecetaPorId);
 
 router.put(
   "/:id",

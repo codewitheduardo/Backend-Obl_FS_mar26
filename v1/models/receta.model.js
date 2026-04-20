@@ -40,9 +40,10 @@ const recetaSchema = new Schema(
       type: String,
       default: "",
     },
-    imagenPublicId: {
+    estado: {
       type: String,
-      default: "",
+      enum: ["borrador", "publicada"],
+      default: "publicada",
     },
     categoriaId: {
       type: Schema.Types.ObjectId,
@@ -58,7 +59,7 @@ const recetaSchema = new Schema(
   {
     timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
 export default mongoose.model("Receta", recetaSchema);

@@ -1,5 +1,6 @@
 import {
   obtenerRecetasService,
+  obtenerMisRecetasService,
   crearRecetaService,
   obtenerRecetaPorIdService,
   editarRecetaService,
@@ -7,12 +8,21 @@ import {
 } from "../services/recetas.service.js";
 
 export const obtenerRecetas = async (req, res, next) => {
-  const usuarioId = req.user.id;
-
-  const recetas = await obtenerRecetasService(usuarioId, req.query);
+  const recetas = await obtenerRecetasService(req.query);
 
   return res.status(200).json({
     message: "Recetas obtenidas correctamente",
+    data: recetas,
+  });
+};
+
+export const obtenerMisRecetas = async (req, res, next) => {
+  const usuarioId = req.user.id;
+
+  const recetas = await obtenerMisRecetasService(usuarioId, req.query);
+
+  return res.status(200).json({
+    message: "Mis recetas obtenidas correctamente",
     data: recetas,
   });
 };
@@ -34,7 +44,7 @@ export const crearReceta = async (req, res, next) => {
 
 export const obtenerRecetaPorId = async (req, res, next) => {
   const { id } = req.params;
-  const usuarioId = req.user.id;
+  const usuarioId = req.user?.id || null;
 
   const receta = await obtenerRecetaPorIdService(id, usuarioId);
 

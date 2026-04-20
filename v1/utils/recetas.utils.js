@@ -1,5 +1,5 @@
-export const construirFiltrosRecetas = (usuarioId, query) => {
-  const filtros = { usuarioId };
+export const construirFiltrosRecetas = (query) => {
+  const filtros = {};
 
   if (query.categoriaId) {
     filtros.categoriaId = query.categoriaId;

@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 const dificultadValores = ["facil", "media", "dificil"];
+const estadoValores = ["borrador", "publicada"];
 
 export const recetaSchema = Joi.object({
   titulo: Joi.string().trim().min(3).max(100).required().messages({
@@ -85,6 +86,14 @@ export const recetaSchema = Joi.object({
       "any.required": "La dificultad es obligatoria",
     }),
 
+  estado: Joi.string()
+    .valid(...estadoValores)
+    .default("publicada")
+    .messages({
+      "string.base": "El estado debe ser un texto",
+      "any.only": "El estado debe ser borrador o publicada",
+    }),
+
   categoriaId: Joi.string().hex().length(24).required().messages({
     "string.base": "La categoría debe ser un texto",
     "string.hex": "La categoría debe tener un formato válido",
@@ -153,10 +162,18 @@ export const updateRecetaSchema = Joi.object({
   }),
 
   dificultad: Joi.string()
+    .trim()
     .valid(...dificultadValores)
     .messages({
       "string.base": "La dificultad debe ser un texto",
       "any.only": "La dificultad debe ser facil, media o dificil",
+    }),
+
+  estado: Joi.string()
+    .valid(...estadoValores)
+    .messages({
+      "string.base": "El estado debe ser un texto",
+      "any.only": "El estado debe ser borrador o publicada",
     }),
 
   categoriaId: Joi.string().hex().length(24).messages({
