@@ -1,5 +1,6 @@
 import Receta from "../models/receta.model.js";
 import Usuario from "../models/usuario.model.js";
+import Categoria from "../models/categoria.model.js";
 import cloudinary from "../config/cloudinary.config.js";
 import { crearError } from "../utils/error.utils.js";
 import { obtenerPaginacion } from "../utils/pagination.utils.js";
