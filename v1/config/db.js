@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
-let cached = global.mongoose;
+let cached = globalThis.mongoose;
 
 if (!cached) {
-  cached = global.mongoose = {
+  cached = globalThis.mongoose = {
     conn: null,
     promise: null,
   };
