@@ -6,6 +6,7 @@ import categoriasRouter from "./routes/categorias.routes.js";
 import recetasExternasRouter from "./routes/recetasExternas.routes.js";
 import favoritosRouter from "./routes/favoritos.routes.js";
 import uploadsRouter from "./routes/uploads.routes.js";
+import iaRoutes from "./routes/ia.routes.js";
 import { autorizationMiddleware } from "./middlewares/auth.middleware.js";
 
 const router = express.Router();
@@ -22,5 +23,6 @@ router.use("/recetas", recetasRouter);
 router.use("/recetas-externas", recetasExternasRouter);
 router.use("/favoritos", favoritosRouter);
 router.use("/uploads", uploadsRouter);
+router.use("/ia", iaRoutes);
 
 export default router;
