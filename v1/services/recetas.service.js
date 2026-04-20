@@ -101,6 +101,12 @@ export const crearRecetaService = async (data, usuarioId, file) => {
     }
   }
 
+  const categoria = await Categoria.findById(data.categoriaId);
+
+  if (!categoria) {
+    throw crearError("Categoría no encontrada", 404);
+  }
+
   let imagenUrl = "";
   let imagenPublicId = "";
 
@@ -111,7 +117,7 @@ export const crearRecetaService = async (data, usuarioId, file) => {
       {
         folder: "recetas",
         resource_type: "auto",
-      }
+      },
     );
 
     imagenUrl = resultadoCloudinary.secure_url;
@@ -119,8 +125,15 @@ export const crearRecetaService = async (data, usuarioId, file) => {
   }
 
   const receta = await Receta.create({
-    ...data,
-    estado: data.estado || "publicada",
+    titulo: data.titulo,
+    descripcion: data.descripcion,
+    ingredientes: data.ingredientes,
+    pasos: data.pasos,
+    tiempoPreparacion: data.tiempoPreparacion,
+    porciones: data.porciones,
+    dificultad: data.dificultad,
+    categoriaId: data.categoriaId,
+    estado: "publicada",
     imagenUrl,
     imagenPublicId,
     usuarioId,
@@ -145,7 +158,7 @@ export const editarRecetaService = async (id, data, usuarioId, file) => {
       {
         folder: "recetas",
         resource_type: "auto",
-      }
+      },
     );
 
     receta.imagenUrl = resultadoCloudinary.secure_url;
@@ -156,8 +169,7 @@ export const editarRecetaService = async (id, data, usuarioId, file) => {
   receta.descripcion = data.descripcion ?? receta.descripcion;
   receta.ingredientes = data.ingredientes ?? receta.ingredientes;
   receta.pasos = data.pasos ?? receta.pasos;
-  receta.tiempoPreparacion =
-    data.tiempoPreparacion ?? receta.tiempoPreparacion;
+  receta.tiempoPreparacion = data.tiempoPreparacion ?? receta.tiempoPreparacion;
   receta.porciones = data.porciones ?? receta.porciones;
   receta.dificultad = data.dificultad ?? receta.dificultad;
   receta.estado = data.estado ?? receta.estado;
