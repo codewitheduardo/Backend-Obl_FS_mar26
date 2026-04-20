@@ -1,4 +1,5 @@
 import express from "express";
+import { roleMiddleware } from "../middlewares/role.middleware.js";
 import { validateBodyMiddleware } from "../middlewares/validateBody.middleware.js";
 import { validateObjectIdMiddleware } from "../middlewares/validateObjectId.middleware.js";
 import { parseJsonFields } from "../middlewares/parseJsonFields.middleware.js";
@@ -18,11 +19,14 @@ import {
 
 const router = express.Router({ mergeParams: true });
 
+// accesible para cualquier usuario autenticado
 router.get("/", obtenerRecetas);
-
 router.get("/mis-recetas", obtenerMisRecetas);
-
 router.get("/:id", validateObjectIdMiddleware, obtenerRecetaPorId);
+
+
+// protegidas para chefs
+router.use(roleMiddleware("chef"));
 
 router.post(
   "/",
