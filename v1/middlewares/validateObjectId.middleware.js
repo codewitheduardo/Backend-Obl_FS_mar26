@@ -5,7 +5,7 @@ export const validateObjectIdMiddleware = (req, res, next) => {
 
   if (!mongoose.isValidObjectId(id)) {
     const error = new Error("ID inválido");
-    error.statusCode = 400;
+    error.status = 400;
     return next(error);
   }
 
