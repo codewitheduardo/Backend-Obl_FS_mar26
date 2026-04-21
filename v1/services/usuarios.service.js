@@ -14,6 +14,14 @@ export const cambiarPlanService = async (usuarioId, nuevoPlan) => {
     throw crearError("Solo los usuarios chef pueden cambiar de plan", 403);
   }
 
+  if (nuevoPlan !== "premium") {
+    throw crearError("El plan enviado no es válido", 400);
+  }
+
+  if (usuario.plan === "premium") {
+    throw crearError("El usuario ya tiene el plan premium", 409);
+  }
+
   if (usuario.plan !== "plus") {
     throw crearError("Solo se puede cambiar de plus a premium", 409);
   }
@@ -50,14 +58,20 @@ export const actualizarFotoUsuarioService = async (usuarioId, file) => {
 
   const publicIdAnterior = usuario.fotoPublicId || "";
 
-  const resultadoCloudinary = await uploadBufferToCloudinary(
-    cloudinary,
-    file.buffer,
-    {
-      folder: "usuarios",
-      resource_type: "auto",
-    }
-  );
+  let resultadoCloudinary;
+
+  try {
+    resultadoCloudinary = await uploadBufferToCloudinary(
+      cloudinary,
+      file.buffer,
+      {
+        folder: "usuarios",
+        resource_type: "auto",
+      },
+    );
+  } catch (error) {
+    throw crearError("No se pudo subir la imagen", 502);
+  }
 
   usuario.foto = resultadoCloudinary.secure_url;
   usuario.fotoPublicId = resultadoCloudinary.public_id;
@@ -65,7 +79,14 @@ export const actualizarFotoUsuarioService = async (usuarioId, file) => {
   await usuario.save();
 
   if (publicIdAnterior) {
-    await cloudinary.uploader.destroy(publicIdAnterior);
+    try {
+      await cloudinary.uploader.destroy(publicIdAnterior);
+    } catch (error) {
+      console.error(
+        "Error al eliminar imagen anterior de Cloudinary:",
+        error.message,
+      );
+    }
   }
 
   return {
