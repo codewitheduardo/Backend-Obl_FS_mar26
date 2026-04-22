@@ -4,16 +4,17 @@ import {
   eliminarFavoritoService,
   verificarFavoritoService,
 } from "../services/favoritos.service.js";
+import { obtenerRecetaExternaPorIdService } from "../services/recetasExternas.service.js";
+import { mapMealDbToFavorito } from "../utils/mealdb.utils.js";
 
 export const agregarFavorito = async (req, res, next) => {
   const { mealDbId } = req.params;
   const usuarioId = req.user.id;
 
-  const favorito = await crearFavoritoService(
-    usuarioId,
-    mealDbId,
-    req.validatedBody,
-  );
+  const meal = await obtenerRecetaExternaPorIdService(mealDbId);
+  const data = mapMealDbToFavorito(meal);
+
+  const favorito = await crearFavoritoService(usuarioId, mealDbId, data);
 
   return res.status(201).json({
     message: "Favorito agregado correctamente",

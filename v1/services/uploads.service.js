@@ -1,6 +1,6 @@
 import cloudinary from "../config/cloudinary.config.js";
 import { crearError } from "../utils/error.utils.js";
-import { uploadBufferToCloudinary } from "../utils/uploadToCloudinary.util.js";
+import { uploadBufferToCloudinary } from "../utils/uploadToCloudinary.utils.js";
 
 export const subirImagenService = async (file, folder = "uploads") => {
   if (!file) {

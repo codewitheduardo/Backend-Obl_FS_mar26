@@ -4,7 +4,7 @@ import {
   obtenerRecetaExternaPorIdService,
   obtenerRecetaAleatoriaService,
   obtenerCategoriasService,
-} from "../services/themealdb.service.js";
+} from "../services/recetasExternas.service.js";
 
 export const getBuscarRecetasExternas = async (req, res, next) => {
   const { q } = req.query;

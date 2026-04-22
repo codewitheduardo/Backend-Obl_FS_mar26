@@ -5,7 +5,7 @@ import cloudinary from "../config/cloudinary.config.js";
 import { crearError } from "../utils/error.utils.js";
 import { obtenerPaginacion } from "../utils/pagination.utils.js";
 import { construirFiltrosRecetas } from "../utils/recetas.utils.js";
-import { uploadBufferToCloudinary } from "../utils/uploadToCloudinary.util.js";
+import { uploadBufferToCloudinary } from "../utils/uploadToCloudinary.utils.js";
 
 export const obtenerRecetasService = async (query) => {
   const { page, limit, skip } = obtenerPaginacion(query);

@@ -12,6 +12,7 @@ connectDB();
 
 const app = express();
 
+// Confía en el proxy para obtener la IP real del cliente
 app.set("trust proxy", 1);
 
 app.use(cors());
