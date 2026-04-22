@@ -1,4 +1,5 @@
 import axios from "axios";
+import { crearError } from "../utils/error.utils.js";
 
 const themealdbApi = axios.create({
   baseURL: process.env.THEMEALDB_BASE_URL,
@@ -26,7 +27,11 @@ export const obtenerRecetaExternaPorIdService = async (id) => {
     params: { i: id },
   });
 
-  return data.meals?.[0] || null;
+  if (!data.meals || data.meals.length === 0 || !data.meals[0]) {
+    throw crearError("Receta externa no encontrada", 404);
+  }
+
+  return data.meals[0];
 };
 
 export const obtenerRecetaAleatoriaService = async () => {
