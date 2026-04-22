@@ -8,8 +8,7 @@ export const crearFavoritoService = async (usuarioId, mealDbId, data) => {
   });
 
   if (favoritoExistente) {
-    const error = crearError("La receta ya está en favoritos", 409);
-    throw error;
+    throw crearError("La receta ya está en favoritos", 409);
   }
 
   const favorito = await Favorito.create({
@@ -35,8 +34,7 @@ export const eliminarFavoritoService = async (usuarioId, mealDbId) => {
   });
 
   if (!favoritoEliminado) {
-    const error = crearError("El favorito no existe", 404);
-    throw error;
+    throw crearError("El favorito no existe", 404);
   }
 
   return favoritoEliminado;
