@@ -76,6 +76,7 @@ export const loginConGoogleService = async (idToken, rol = "lector") => {
       plan: "plus",
       proveedor: "google",
       foto: googleUser.foto || "",
+      fotoPublicId: googleUser.fotoPublicId || "",
     });
 
     await usuario.save();
@@ -90,6 +91,7 @@ export const loginConGoogleService = async (idToken, rol = "lector") => {
 
     usuario.nombre = googleUser.nombre || usuario.nombre;
     usuario.foto = googleUser.foto || usuario.foto;
+    usuario.fotoPublicId = googleUser.fotoPublicId || usuario.fotoPublicId;
 
     await usuario.save();
   }
