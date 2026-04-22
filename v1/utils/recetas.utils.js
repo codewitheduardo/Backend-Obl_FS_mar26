@@ -17,8 +17,8 @@ export const construirFiltrosRecetas = (query) => {
     filtros.tiempoPreparacion = Number(query.tiempoPreparacion);
   }
 
-  if (query.tiempoMax) {
-    filtros.tiempoPreparacion = { $lte: Number(query.tiempoMax) };
+  if (query.ingrediente) {
+    filtros.ingredientes = { $regex: query.ingrediente, $options: "i" };
   }
 
   return filtros;
