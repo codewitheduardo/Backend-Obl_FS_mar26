@@ -24,7 +24,9 @@ const limiter = rateLimit({
   message: "Demasiadas solicitudes desde esta IP, intenta más tarde",
 });
 
-app.use(limiter);
+if (process.env.ENABLE_RATE_LIMIT === "true") {
+  app.use(limiter);
+}
 
 app.get("/", (req, res) => {
   res.send("Bienvenido a la API de Cook Book");
