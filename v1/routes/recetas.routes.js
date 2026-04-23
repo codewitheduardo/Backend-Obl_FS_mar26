@@ -15,13 +15,21 @@ import {
   editarReceta,
   eliminarReceta,
 } from "../controllers/recetas.controller.js";
+import comentariosRouter from "./comentarios.routes.js";
 
 const router = express.Router({ mergeParams: true });
 
 // accesible para cualquier usuario autenticado
 router.get("/", obtenerRecetas);
 router.get("/mis-recetas", obtenerMisRecetas);
-router.get("/:id", validateObjectIdMiddleware, obtenerRecetaPorId);
+
+router.use(
+  "/:recetaId/comentarios",
+  validateObjectIdMiddleware("recetaId"),
+  comentariosRouter
+);
+
+router.get("/:id", validateObjectIdMiddleware("id"), obtenerRecetaPorId);
 
 // protegidas para chefs
 router.use(roleMiddleware("chef"));
@@ -35,12 +43,12 @@ router.post(
 
 router.put(
   "/:id",
-  validateObjectIdMiddleware,
+  validateObjectIdMiddleware("id"),
   upload.single("imagen"),
   validateBodyMiddleware(updateRecetaSchema),
   editarReceta,
 );
 
-router.delete("/:id", validateObjectIdMiddleware, eliminarReceta);
+router.delete("/:id", validateObjectIdMiddleware("id"), eliminarReceta);
 
 export default router;

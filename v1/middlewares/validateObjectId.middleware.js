@@ -1,13 +1,15 @@
 import mongoose from "mongoose";
 
-export const validateObjectIdMiddleware = (req, res, next) => {
-  const { id } = req.params;
+export const validateObjectIdMiddleware = (paramName = "id") => {
+  return (req, res, next) => {
+    const value = req.params[paramName];
 
-  if (!mongoose.isValidObjectId(id)) {
-    const error = new Error("ID inválido");
-    error.status = 400;
-    return next(error);
-  }
+    if (!mongoose.isValidObjectId(value)) {
+      const error = new Error("ID inválido");
+      error.status = 400;
+      return next(error);
+    }
 
-  next();
+    next();
+  };
 };

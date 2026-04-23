@@ -19,7 +19,7 @@ const router = express.Router({ mergeParams: true });
 // accesible para cualquier usuario autenticado
 router.get("/", obtenerCategorias);
 
-router.get("/:id", validateObjectIdMiddleware, obtenerCategoriaPorId);
+router.get("/:id", validateObjectIdMiddleware("id"), obtenerCategoriaPorId);
 
 
 // protegidas para chefs
@@ -29,11 +29,11 @@ router.post("/", validateBodyMiddleware(categoriaSchema), crearCategoria);
 
 router.put(
   "/:id",
-  validateObjectIdMiddleware,
+  validateObjectIdMiddleware("id"),
   validateBodyMiddleware(updateCategoriaSchema),
   editarCategoria,
 );
 
-router.delete("/:id", validateObjectIdMiddleware, eliminarCategoria);
+router.delete("/:id", validateObjectIdMiddleware("id"), eliminarCategoria);
 
 export default router;
