@@ -19,7 +19,7 @@ export const obtenerRecetasService = async (query) => {
 
   const recetas = await Receta.find(filtros)
     .populate("categoriaId", "nombre")
-    .populate("usuarioId", "nombre email")
+    .populate("usuarioId", "nombre email foto")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
@@ -45,7 +45,7 @@ export const obtenerMisRecetasService = async (usuarioId, query) => {
 
   const recetas = await Receta.find(filtros)
     .populate("categoriaId", "nombre")
-    .populate("usuarioId", "nombre email")
+    .populate("usuarioId", "nombre email foto")
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
@@ -62,7 +62,7 @@ export const obtenerMisRecetasService = async (usuarioId, query) => {
 export const obtenerRecetaPorIdService = async (id, usuarioId = null) => {
   const receta = await Receta.findById(id)
     .populate("categoriaId", "nombre")
-    .populate("usuarioId", "nombre email");
+    .populate("usuarioId", "nombre email foto");
 
   if (!receta) {
     throw crearError("Receta no encontrada", 404);
