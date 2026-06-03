@@ -89,9 +89,16 @@ export const loginConGoogleService = async (idToken, rol = "lector") => {
       throw error;
     }
 
+    // Actualizar nombre por si cambió en Google
     usuario.nombre = googleUser.nombre || usuario.nombre;
-    usuario.foto = googleUser.foto || usuario.foto;
-    usuario.fotoPublicId = googleUser.fotoPublicId || usuario.fotoPublicId;
+
+    // Solo guardar la foto de Google si el usuario NO tiene foto propia en la DB.
+    // Esto protege las fotos subidas manualmente vía Cloudinary.
+    if (!usuario.foto) {
+      usuario.foto = googleUser.foto || "";
+    }
+
+    // fotoPublicId no se toca en login de Google — es exclusivo de Cloudinary.
 
     await usuario.save();
   }
