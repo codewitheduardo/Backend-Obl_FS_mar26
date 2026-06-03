@@ -26,7 +26,7 @@ export const crearComentarioService = async (usuarioId, recetaId, data) => {
     valoracion: data.valoracion,
   });
 
-  return comentario;
+  return comentario.populate("usuario", "nombre foto");
 };
 
 export const editarMiComentarioService = async (usuarioId, recetaId, data) => {
@@ -55,7 +55,7 @@ export const editarMiComentarioService = async (usuarioId, recetaId, data) => {
 
   await comentario.save();
 
-  return comentario;
+  return comentario.populate("usuario", "nombre foto");
 };
 
 export const obtenerComentariosPorRecetaService = async (recetaId, query) => {
