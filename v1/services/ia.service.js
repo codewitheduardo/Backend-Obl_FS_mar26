@@ -6,6 +6,20 @@ const OPENROUTER_URL =
 
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || "openrouter/free";
 
+const SYSTEM_PROMPT = `Sos un asistente de cocina para la app Cook Book.
+Respondé SIEMPRE con un objeto JSON válido y nada más. Sin texto antes ni después. Sin bloques de código markdown. Sin explicaciones.
+El JSON debe tener exactamente estos campos:
+{
+  "titulo": "string — nombre corto del plato",
+  "descripcion": "string — 1 oración describiendo el plato",
+  "tiempoPreparacion": número entero en minutos,
+  "porciones": número entero,
+  "dificultad": "facil" o "media" o "dificil",
+  "ingredientes": ["cantidad + ingrediente", ...],
+  "pasos": ["instrucción completa del paso", ...]
+}
+Reglas: mínimo 4 ingredientes con cantidad, mínimo 4 pasos, idioma español rioplatense, dificultad exactamente sin tildes.`;
+
 export const generarTextoIAService = async (prompt) => {
   if (!process.env.OPENROUTER_API_KEY) {
     throw crearError("OPENROUTER_API_KEY no está configurada", 500);
@@ -19,7 +33,7 @@ export const generarTextoIAService = async (prompt) => {
         messages: [
           {
             role: "system",
-            content: "Sos un asistente útil para una aplicación de recetas.",
+            content: SYSTEM_PROMPT,
           },
           {
             role: "user",
@@ -27,14 +41,14 @@ export const generarTextoIAService = async (prompt) => {
           },
         ],
         temperature: 0.7,
-        max_tokens: 200,
+        max_tokens: 800,
       },
       {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
         },
-        timeout: 10000,
+        timeout: 20000,
       }
     );
 
