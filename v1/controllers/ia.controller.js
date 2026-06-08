@@ -12,6 +12,7 @@ export const generarTextoIA = async (req, res, next) => {
         data,
       });
     } catch (errorIA) {
+      console.error("[IA] Error del servicio:", errorIA.message);
       return res.status(200).json({
         message: "La IA no estuvo disponible, se devolvió fallback",
         data: {

@@ -16,7 +16,6 @@ export const generarTextoIAService = async (prompt) => {
       OPENROUTER_URL,
       {
         model: OPENROUTER_MODEL,
-        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
