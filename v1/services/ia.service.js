@@ -16,6 +16,7 @@ export const generarTextoIAService = async (prompt) => {
       OPENROUTER_URL,
       {
         model: OPENROUTER_MODEL,
+        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
@@ -37,7 +38,7 @@ El JSON debe tener exactamente esta estructura:
           },
         ],
         temperature: 0.7,
-        max_tokens: 900,
+        max_tokens: 1500,
       },
       {
         headers: {
